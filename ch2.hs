@@ -56,3 +56,44 @@ melody4 = fromBlues( mt 6 qn :+: rest en :+: times 2 ( mt 6 sn ) :+:
                      times 2 (mt 6 qn ) :+: mt 6 en )
                      
 bluesSong = times 2 ( melody1 :=: melody2 :=: melody3 :=: melody4) 
+
+
+{-|
+  2.4 Notes:
+
+  type AbsPitch = Int
+
+  absPitch :: Pitch -> AbsPitch
+  absPitch (pc, oct) = 12 * oct + pcToInt pc
+
+  -- absPitch(C, 4) == 60
+
+  pitch :: AbsPitch -> Pitch
+  pitch ap =
+        let (oct, n) = divMod ap 12 --  ( integerDivision(ap/12), modulo(ap%12) )
+        in ([C, Cs, D, Ds, E, F, Fs, G, Gs, A, As, B]!!n, oct)
+
+        list!!n --> returns the (n+1)th element in list
+
+  -- pitch(60) == (C, 4)
+
+  trans :: Int -> Pitch -> Pitch
+  trans i p = pitch (absPitch p + i)
+  
+-}
+
+
+
+-- Exercise 2.5
+
+transM :: AbsPitch -> Music Pitch -> Music Pitch
+transM ap (Prim ( Note d p )) =
+          let modifiedPitch = pitch (( absPitch p ) + ap)
+          in  Prim ( Note d modifiedPitch )
+transM ap (Prim (Rest d )) = (Prim ( Rest d ))
+transM ap (m1 :+: m2) = transM ap m1 :+: transM ap m2
+transM ap (m1 :=: m2) = transM ap m1 :=: transM ap m2
+transM ap (Modify cntrl m) = (Modify cntrl ( transM ap m)) -- ?
+       
+
+
