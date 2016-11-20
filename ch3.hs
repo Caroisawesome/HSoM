@@ -1,20 +1,18 @@
+import Euterpea
+
 {-|
 
         Chapter 3
-
-        higher-order functions: functions that take one or more functions as arguments or return a function as a result (can be placed in data structures)
-
-        polymorphic types
 
         length :: [a] -> Integer
         length[] = 0
         length(x:xs) = 1 + length xs
 
         head :: [a] -> a
-        head (x:_) = x -- "_" is a wildcard pattern. anything goes, binds no variables
+        head (x:_) = x -- ( "_" wildcard pattern. anything goes, binds no variables)
 
         tail :: [a] -> [a]
-        tal (_:xs) = xs
+        tail (_:xs) = xs
 
         toAbsPitches :: [Pitch] -> [AbsPitch]
         toAbsPitches [] = []
@@ -25,6 +23,26 @@
 
         toAbsPitches :: [Pitch] -> [AbsPitch]
         toAbsPitchs ps = map absPitch ps
-
         
 -}
+
+-- exercise 1
+f1 :: Int -> [Pitch] -> [Pitch]
+f1 ap [] = []
+f1 ap ps = map (trans ap) ps
+
+
+-- exercise 2
+f2 :: [Dur] -> [Music a]
+f2 [] = []
+f2 ds = map rest ds
+
+
+-- exercise 3
+fn (Prim (Note d p )) = Prim (Note (d/2) p ) :+: rest (d/2)
+ 
+f3 :: [Music Pitch] -> [Music Pitch]
+f3 [] = []
+f3 ns = map fn ns
+
+
