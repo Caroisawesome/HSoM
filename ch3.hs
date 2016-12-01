@@ -46,3 +46,63 @@ f3 [] = []
 f3 ns = map fn ns
 
 
+{-|
+        3.3
+
+        (++) :: [a] -> [a] -> [a]
+        [] ++ ys = ys
+        (x:xs) ++ ys = x:(xs++ys)
+
+        3.4
+        line, chord :: [Music a] -> Music a
+        line ms = foldr (:+:) ms
+        chord ms = foldr (:=:) ms
+
+        maxPitch1 :: [Pitch] -> Pitch
+        maxPitch ps = foldr1 (!!!) ps
+
+
+        3.6
+        note qn p1 :+: note qn p2 :+: ... :+: note qn pn
+        ==
+        line (map (note qn ) [p1, p2, ..., pn]
+
+        toAbsPitches = map absPitch
+        toPitches = map pitch
+
+-}
+
+-- 3.2
+
+-- 3.3  [Integer -> Integer]
+
+-- 3.4
+
+
+
+-- TODO TYPE -- can I use flip?
+applyEach :: [(a -> b)] -> a -> [b]
+applyEach functions val =
+          let f5 val function = function val
+          in map (f5 val ) functions 
+
+applyEach2 :: [(a -> b)] -> a -> [b]
+applyEach2 fns val = map ($ val) fns
+
+-- 3.5
+--applyAll :: [a -> b] -> a -> a
+applyAll [] val = val
+applyAll (f:functions) val = f (applyAll functions val)
+
+
+-- 3.6 foldl ?
+
+
+
+
+
+                             
+                            
+                       
+        
+         
