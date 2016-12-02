@@ -97,12 +97,29 @@ applyAll (f:functions) val = f (applyAll functions val)
 
 -- 3.6 foldl ?
 
+--3.7
 
+length2 :: [a] -> Integer
+length2 [] = 0
+length2 xs = foldl (\ n _ -> n+1) 0 xs        
 
+--3.8
 
+doubleEach :: Num a => [a] -> [a]
+doubleEach [] = []
+doubleEach (x:xs) = x*2 : doubleEach xs
 
-                             
-                            
+pairAndOne :: Num a => [a] -> [(a,a)]
+pairAndOne xs = map (\ n -> (n, n+1)) xs
                        
-        
-         
+addEachPair :: Num a => [(a,a)] -> [a]
+addEachPair xs = map (\ (x,y) -> x + y ) xs
+
+--  TODO: THIS DOES NOT WORK !!!! addPairsPointwise :: Num a => [(a,a)] => (a,a)
+addPairsPointwise xs = foldl (\ (x,y) (a, b) -> (x+a, y+b)) (0,0) xs
+
+
+-- 3.9
+
+--fuse :: [Dur] -> [ Dur -> Music a ] -> [Music a]
+--fuse dns nts = map () dns
