@@ -79,7 +79,7 @@ f3 ns = map fn ns
 -- 3.4
 
 
-
+ 
 -- TODO TYPE -- can I use flip?
 applyEach :: [(a -> b)] -> a -> [b]
 applyEach functions val =
@@ -119,7 +119,46 @@ addEachPair xs = map (\ (x,y) -> x + y ) xs
 addPairsPointwise xs = foldl (\ (x,y) (a, b) -> (x+a, y+b)) (0,0) xs
 
 
--- 3.9
+-- 3.9 
 
---fuse :: [Dur] -> [ Dur -> Music a ] -> [Music a]
---fuse dns nts = map () dns
+fuse :: [Dur] -> [ Dur -> Music a ] -> [Music a]
+fuse dns nts = if length dns /= length nts
+                  then error "Prelude.fuse: length must match"
+                  else let comb = zip nts dns
+                       in map (\ (note, dur) -> note dur ) comb
+
+
+--3.10 TODO: make recursive
+
+getBiggerNum :: Ord a => a -> a -> a
+getBiggerNum a b = if a > b
+                   then a
+                   else b
+
+getSmallerNum :: Ord a => a -> a -> a
+getSmallerNum a b = if a > b
+                    then b
+                    else a
+
+maxAbsPitch :: (Ord a, Num a) => [a] -> a
+maxAbsPitch [] = error "Prelude.maxAbsPitch: empty list"
+maxAbsPitch ps = foldl getBiggerNum 0 ps
+
+minAbsPitch :: (Ord a, Num a) => [a] -> a
+minAbsPitch [] = error ""
+minAbsPitch ps = foldl getSmallerNum (2^100) ps
+
+--3.11  TODO: MAKE RECURSIVE
+
+chrom :: Pitch -> Pitch -> Music Pitch
+chrom p1 p2 = let ap1 = absPitch p1
+                  ap2 = absPitch p2
+                  absPitches = [ap1, ap1 + (signum $ ap2 - ap1) .. ap2 ]
+                  comparePitches (p:pitcharray) ap = if p == pitch ap
+                                                     then p:pitcharray
+                                                     else (pitch ap):p:pitcharray
+                  relevantPitches = foldl comparePitches [p1] absPitches
+                  in foldr (\ val acc -> acc :+: note qn val) (rest 0) relevantPitches 
+
+-- 3.12
+

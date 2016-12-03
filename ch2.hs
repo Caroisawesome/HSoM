@@ -46,7 +46,6 @@ fromBlues (m1 :=: m2) = fromBlues(m1) :=: fromBlues(m2)
 
 
 melody1 = fromBlues( fi 4 dqn :+: ms 4 en :+: fo 4 qn :+: mt 4 hn :+: ro 4 qn :+: mt 4 hn )
-melody2 = fromBlues( mt 3 dhn :+: ro 3 dhn :+: mt 3 dhn :+: rest hn :=: 
                      fi 3 dhn :+: mt 3 dhn :+: fi 3 dhn :+: rest hn )
 melody3 = fromBlues( fi 5 qn :+: rest en :+: times 2 ( fi 5 sn ) :+:
                      fi 5 en :+: rest sn :+: fi 5 en :+: rest sn :+:
