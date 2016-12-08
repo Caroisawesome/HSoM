@@ -37,4 +37,4 @@ bells1 = let fnn acc val
           in instrument Agogo (foldl fnn (rest 0) [1..31])
 
     
-song = mel1 :=: bells1
+song = mel1 :=: bells1 :=: times 4 (instrument Helicopter (d 2 wn))

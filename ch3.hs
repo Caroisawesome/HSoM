@@ -115,7 +115,7 @@ pairAndOne xs = map (\ n -> (n, n+1)) xs
 addEachPair :: Num a => [(a,a)] -> [a]
 addEachPair xs = map (\ (x,y) -> x + y ) xs
 
---  TODO: THIS DOES NOT WORK !!!! addPairsPointwise :: Num a => [(a,a)] => (a,a)
+addPairsPointwise :: Num a => [(a,a)] -> (a,a)
 addPairsPointwise xs = foldl (\ (x,y) (a, b) -> (x+a, y+b)) (0,0) xs
 
 
@@ -123,7 +123,7 @@ addPairsPointwise xs = foldl (\ (x,y) (a, b) -> (x+a, y+b)) (0,0) xs
 
 fuse :: [Dur] -> [ Dur -> Music a ] -> [Music a]
 fuse dns nts = if length dns /= length nts
-                  then error "Prelude.fuse: length must match"
+                  then error "fuse: length must match"
                   else let comb = zip nts dns
                        in map (\ (note, dur) -> note dur ) comb
 
@@ -141,11 +141,11 @@ getSmallerNum a b = if a > b
                     else a
 
 maxAbsPitch :: (Ord a, Num a) => [a] -> a
-maxAbsPitch [] = error "Prelude.maxAbsPitch: empty list"
+maxAbsPitch [] = error "maxAbsPitch: empty list"
 maxAbsPitch ps = foldl getBiggerNum 0 ps
 
 minAbsPitch :: (Ord a, Num a) => [a] -> a
-minAbsPitch [] = error ""
+minAbsPitch [] = error "maxAbsPitch: empty list"
 minAbsPitch ps = foldl getSmallerNum (2^100) ps
 
 --3.11  TODO: MAKE RECURSIVE
@@ -154,11 +154,43 @@ chrom :: Pitch -> Pitch -> Music Pitch
 chrom p1 p2 = let ap1 = absPitch p1
                   ap2 = absPitch p2
                   absPitches = [ap1, ap1 + (signum $ ap2 - ap1) .. ap2 ]
-                  comparePitches (p:pitcharray) ap = if p == pitch ap
-                                                     then p:pitcharray
-                                                     else (pitch ap):p:pitcharray
-                  relevantPitches = foldl comparePitches [p1] absPitches
-                  in foldr (\ val acc -> acc :+: note qn val) (rest 0) relevantPitches 
+                  in foldl (\ acc val -> acc :+: note qn (pitch val)) (rest 0) absPitches
 
+newPitch :: Pitch -> Pitch -> Pitch
+newPitch p1 p2
+  | absPitch p1 > absPitch p2 = trans (-1) p1
+  | absPitch p1 < absPitch p2 = trans 1 p1
+  | otherwise = p1
+
+chrom2 :: Pitch -> Pitch -> Music Pitch
+chrom2 p1 p2 
+  | p1 == p2 = note qn p2
+  | otherwise = note qn p1 :+: chrom2 (newPitch p1 p2) p2
+
+            
 -- 3.12
+
+mkScale :: Pitch -> [Int] -> Music Pitch
+mkScale p [] = note qn p
+mkScale p (interval:intervals) = note qn p :+: mkScale (trans interval p) intervals 
+
+
+-- 3.13
+
+--data MajorScaleModes = Ionian
+--    | Dorian
+--    | Phrygian
+--    | Lydian
+--    | Mixolydian
+--    | Aeolian
+--    | Locrian
+
+
+
+
+
+
+
+
+
 
