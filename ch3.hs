@@ -148,7 +148,7 @@ minAbsPitch :: (Ord a, Num a) => [a] -> a
 minAbsPitch [] = error "maxAbsPitch: empty list"
 minAbsPitch ps = foldl getSmallerNum (2^100) ps
 
---3.11  TODO: MAKE RECURSIVE
+--3.11
 
 chrom :: Pitch -> Pitch -> Music Pitch
 chrom p1 p2 = let ap1 = absPitch p1
@@ -177,18 +177,41 @@ mkScale p (interval:intervals) = note qn p :+: mkScale (trans interval p) interv
 
 -- 3.13
 
---data MajorScaleModes = Ionian
---    | Dorian
---    | Phrygian
---    | Lydian
---    | Mixolydian
---    | Aeolian
---    | Locrian
+data MajorScaleMode = Ionian
+    | Dorian
+    | Phrygian
+    | Lydian
+    | Mixolydian
+    | Aeolian
+    | Locrian
+
+genScale :: Pitch -> MajorScaleMode -> Music Pitch
+genScale p mode = 
+  let intervals  = cycle [2, 2, 1, 2, 2, 2, 1]
+      getIntervals n = take 7 $ drop n $ intervals
+      getModeIntervals Ionian = getIntervals 0
+      getModeIntervals Dorian = getIntervals 1
+      getModeIntervals Phrygian = getIntervals 2
+      getModeIntervals Lydian = getIntervals 3
+      getModeIntervals Mixolydian = getIntervals 4
+      getModeIntervals Aeolian = getIntervals 5
+      getModeIntervals Locrian = getIntervals 6
+  in mkScale p (getModeIntervals mode)
 
 
+-- 3.14
+fj =  
+  let notes = [[c 3 qn, d 3 qn, e 3 qn, c 3 qn], [e 3 qn, f 3 qn, g 3 hn], [ g 3 en, a 3 en, g 3 en, f 3 en, e 3 qn, c 3 qn], [ c 3 qn, g 2 qn, c 3 hn]]
+  in foldl (\ mel noteslist -> mel :+: times 2 (line noteslist) ) (rest 0) notes
 
 
+-- 3.15 
 
+encrypt :: String -> String
+encrypt str = map (\s -> toEnum ((fromEnum s) + 1)) str
+
+decrypt :: String -> String
+decrypt str = map (\s -> toEnum ((fromEnum s) - 1)) str
 
 
 
